@@ -1,12 +1,12 @@
 ﻿'use client';
 
 import { Suspense } from 'react';
-import SearchContent from './SearchContent';
+import InspirationContent from './InspirationContent';
 
-export default function SearchPage() {
+export default function InspirationPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-      <SearchContent />
+      <InspirationContent />
     </Suspense>
   );
 }

@@ -1,94 +1,94 @@
-﻿'use client'
+﻿'use client';
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import ProductCard from '@/components/ui/ProductCard'
-import { Filter, X, Grid3X3, LayoutList, ChevronDown, Loader2 } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import ProductCard from '@/components/ui/ProductCard';
+import { Filter, X, Grid3X3, LayoutList, ChevronDown, Loader2 } from 'lucide-react';
 
 interface Product {
-  id: string
-  name: string
-  price: number
-  imageUrl: string
-  modelImageUrl: string | null
-  isTrending: boolean
-  isViral: boolean
-  shopeeLink: string
-  category: { name: string; slug: string }
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  modelImageUrl: string | null;
+  isTrending: boolean;
+  isViral: boolean;
+  shopeeLink: string;
+  category: { name: string; slug: string };
 }
 
 interface Category {
-  id: string
-  name: string
-  slug: string
+  id: string;
+  name: string;
+  slug: string;
 }
 
-export default function ProductsPage() {
-  const searchParams = useSearchParams()
-  const categoryFilter = searchParams.get('category')
+export default function ProductsContent() {
+  const searchParams = useSearchParams();
+  const categoryFilter = searchParams.get('category');
   
-  const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showFilter, setShowFilter] = useState(false)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [selectedCategory, setSelectedCategory] = useState(categoryFilter || '')
-  const [sortBy, setSortBy] = useState('newest')
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000])
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showFilter, setShowFilter] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedCategory, setSelectedCategory] = useState(categoryFilter || '');
+  const [sortBy, setSortBy] = useState('newest');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    filterAndSortProducts()
-  }, [selectedCategory, sortBy, priceRange, products])
+    filterAndSortProducts();
+  }, [selectedCategory, sortBy, priceRange, products]);
 
   const fetchData = async () => {
     try {
       const [prodRes, catRes] = await Promise.all([
         fetch('/api/products'),
         fetch('/api/categories')
-      ])
-      const prodData = await prodRes.json()
-      const catData = await catRes.json()
+      ]);
+      const prodData = await prodRes.json();
+      const catData = await catRes.json();
       
-      if (prodData.success) setProducts(prodData.products)
-      if (catData.success) setCategories(catData.categories)
+      if (prodData.success) setProducts(prodData.products);
+      if (catData.success) setCategories(catData.categories);
     } catch (error) {
-      console.error('Failed to fetch data:', error)
+      console.error('Failed to fetch data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const filterAndSortProducts = () => {
-    let filtered = [...products]
+    let filtered = [...products];
     
     if (selectedCategory) {
-      filtered = filtered.filter(p => p.category.slug === selectedCategory)
+      filtered = filtered.filter(p => p.category.slug === selectedCategory);
     }
     
-    filtered = filtered.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
+    filtered = filtered.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
     
     if (sortBy === 'price-asc') {
-      filtered.sort((a, b) => a.price - b.price)
+      filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-desc') {
-      filtered.sort((a, b) => b.price - a.price)
+      filtered.sort((a, b) => b.price - a.price);
     } else {
-      filtered.sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime())
+      filtered.sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime());
     }
     
-    setFilteredProducts(filtered)
-  }
+    setFilteredProducts(filtered);
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-gray-800" size={32} />
       </div>
-    )
+    );
   }
 
   return (
@@ -158,7 +158,7 @@ export default function ProductsPage() {
           : 'space-y-5'
         }>
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard key={product.id} {...product} modelImageUrl={product.modelImageUrl || undefined} />
           ))}
         </div>
 
@@ -242,5 +242,5 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
