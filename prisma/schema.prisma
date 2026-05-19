@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String    @db.Text
+  price       Int
+  imageUrl    String
+  modelImageUrl String?
+  shopeeLink  String
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  isTrending  Boolean   @default(false)
+  isViral     Boolean   @default(false)
+  views       Int       @default(0)
+  clicks      Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  affiliateClicks AffiliateClick[]  // Relasi balikan
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  icon      String?
+  imageUrl  String?
+  products  Product[]
+}
+
+model Banner {
+  id         String   @id @default(cuid())
+  title      String
+  subtitle   String?
+  imageUrl   String
+  buttonText String   @default("Shop Now")
+  buttonLink String
+  isActive   Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Inspiration {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String   @db.Text
+  excerpt   String
+  imageUrl  String
+  tags      String[]
+  views     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Visitor {
+  id            String   @id @default(cuid())
+  sessionId     String
+  ipHash        String
+  device        String?
+  trafficSource String?
+  visitedAt     DateTime @default(now())
+}
+
+model AffiliateClick {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  sessionId     String
+  device        String?
+  trafficSource String?
+  clickedAt     DateTime @default(now())
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
