@@ -1,0 +1,30 @@
+﻿# Dependencies
+node_modules/
+.next/
+
+# Development files
+.git/
+README.md
+.vscode/
+*.log
+.env.local
+.env.development
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.spec.ts
+
+# Prisma
+prisma/*.ts
+!prisma/schema.prisma
+
+# Images & media (jika ada)
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.mp4
+
+# Documentation
+**/*.md
