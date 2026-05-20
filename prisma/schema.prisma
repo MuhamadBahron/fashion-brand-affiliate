@@ -8,32 +8,32 @@ datasource db {
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String    @db.Text
-  price       Int
-  imageUrl    String
-  modelImageUrl String?
-  shopeeLink  String
-  categoryId  String
-  category    Category  @relation(fields: [categoryId], references: [id])
-  isTrending  Boolean   @default(false)
-  isViral     Boolean   @default(false)
-  views       Int       @default(0)
-  clicks      Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  affiliateClicks AffiliateClick[]  // Relasi balikan
+  id              String           @id @default(cuid())
+  name            String
+  slug            String           @unique
+  description     String
+  price           Int
+  imageUrl        String
+  modelImageUrl   String?
+  shopeeLink      String
+  categoryId      String
+  isTrending      Boolean          @default(false)
+  isViral         Boolean          @default(false)
+  views           Int              @default(0)
+  clicks          Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  affiliateClicks AffiliateClick[]
+  category        Category         @relation(fields: [categoryId], references: [id])
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  slug      String    @unique
-  icon      String?
-  imageUrl  String?
-  products  Product[]
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  icon     String?
+  imageUrl String?
+  products Product[]
 }
 
 model Banner {
@@ -52,7 +52,7 @@ model Inspiration {
   id        String   @id @default(cuid())
   title     String
   slug      String   @unique
-  content   String   @db.Text
+  content   String
   excerpt   String
   imageUrl  String
   tags      String[]
@@ -73,11 +73,11 @@ model Visitor {
 model AffiliateClick {
   id            String   @id @default(cuid())
   productId     String
-  product       Product  @relation(fields: [productId], references: [id])
   sessionId     String
   device        String?
   trafficSource String?
   clickedAt     DateTime @default(now())
+  product       Product  @relation(fields: [productId], references: [id])
 }
 
 model Admin {
@@ -86,4 +86,3 @@ model Admin {
   password  String
   createdAt DateTime @default(now())
 }
-
