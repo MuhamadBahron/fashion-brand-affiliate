@@ -1,4 +1,5 @@
-﻿# Dependencies
+@'
+# Dependencies
 node_modules/
 .next/
 
@@ -19,7 +20,7 @@ README.md
 prisma/*.ts
 !prisma/schema.prisma
 
-# Images & media (jika ada)
+# Images & media
 **/*.png
 **/*.jpg
 **/*.jpeg
@@ -28,3 +29,4 @@ prisma/*.ts
 
 # Documentation
 **/*.md
+'@ | Out-File -FilePath ".vercelignore" -Encoding utf8
